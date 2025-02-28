@@ -1,0 +1,10 @@
+---
+title: "Applying tidy data principles to Curriculum vitae"
+author: "Eli Felts"
+format: html
+editor: visual
+---
+
+## Background
+
+I'm writing this blog post less than two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that most do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in a Frankenstein of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.
