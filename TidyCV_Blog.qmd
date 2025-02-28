@@ -3,8 +3,37 @@ title: "Applying tidy data principles to Curriculum vitae"
 author: "Eli Felts"
 format: html
 editor: visual
+bibliography: references.bib
 ---
 
 ## Background
 
-I'm writing this blog post less than two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that most do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in a Frankenstein of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.
+I'm writing this blog post less than two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that many do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in a hodge podge of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.
+
+Now that I had a little bit of time to update my materials, I started thinking about how I could make it easier on myself in the future. Over the last few years I've moved essentially all of my workflows into the R environment, and I thought there must be something there to help with this problem. As expected, the R community did not disappoint and I quickly found the excellent `vitae` package which provides useful, easy-to-understand functions for constructing elements of a CV, as well as some sharp-looking templates for rendering to a PDF document.
+
+Pretty much as soon as I discovered `vitae` I started converting my existing, awful looking CV that lived in a Microsoft Word document over to a markdown file.
+
+What I started to notice is that there are a few types of data, and common structures to those data that feed into the elements that a natural resource professional would want to include in their CV. The examples from the vitae package store much of this information within the markdown file that is then eventually rendered to a PDF. Something like the following for storing records of education.
+
+```{r vitae_example}
+
+library(tidyverse)
+
+education.dat <- tribble(
+  ~ Degree, ~ Year, ~ Institution, ~ Where,
+  "Doctor of Philosophy, Wildlife and Fisheries Sciences", "2018", "South Dakota State University", "Brookings, SD",
+  "Master of Science, Wildlife and Fisheries Sciences", "2013", "South Dakota State University", "Brookings, SD",
+  "Bachelor of Science, Biology", "2010", "University of Wisconsin-Oshkosh", "Oshkosh, WI"
+) 
+
+```
+
+This format is tailored to feed into the `vitae` package functions, specifically the `brief_entries()` and `detailed_entries()` functions that expect arguments for what, when, with, where, and why. This is a very good way to conceptualize the elements of a CV, but storing data specifically in this format means that the underlying information associated with your professional history is summarized and is not tidy [@wickham2014].
+
+If you're not familiar with the concept of tidy data, the basic principle is that when you're organizing tabular data every row should represent an observation, every column should represent a variable, and each type of observational unit should have its own table [@wickham2014]. The table of education in the snippet of code above shows a good example of untidy data. For example. the "Degree" column has multiple variables which would be more correctly identified as degree (Doctor of Philosophy) and major (Wildlife and Fisheries Sciences). The benefits of organizing data according to these principles are difficult to overstate.
+
+The application to records representing your CV is a little bit of an unusual application of the tidy data paradigm, but I wanted to try it for 2 reasons:
+
+1.  I have yet to find a case where organizing information in tidy data format wasn't enormously beneficial
+2.  I'm currently unemployed so I frankly have the time to do it
