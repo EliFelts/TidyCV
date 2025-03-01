@@ -8,7 +8,7 @@ bibliography: references.bib
 
 ## Background
 
-I'm writing this blog post less than two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that many do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in a hodge podge of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.
+I'm writing this blog post two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that many do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in a hodge podge of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.
 
 Now that I had a little bit of time to update my materials, I started thinking about how I could make it easier on myself in the future. Over the last few years I've moved essentially all of my workflows into the R environment, and I thought there must be something there to help with this problem. As expected, the R community did not disappoint and I quickly found the excellent `vitae` package which provides useful, easy-to-understand functions for constructing elements of a CV, as well as some sharp-looking templates for rendering to a PDF document.
 
@@ -37,3 +37,106 @@ The application to records representing your CV is a little bit of an unusual ap
 
 1.  I have yet to find a case where organizing information in tidy data format wasn't enormously beneficial
 2.  I'm currently unemployed so I frankly have the time to do it
+
+My goal with this blog post is to identify some core data types that are associated with CVs, and provide some recommendations and a spreadsheet template for others to use. As I worked through my own CV update I realized there were two broad categories of information that needed to be split:
+
+1.  Basic information that can live in a flat file like a spreadsheet
+2.  Citable works such as peer-reviewed publications that have specific guidelines from publishers about formatting as well as softwares developed around those formatting guidelines.
+
+In the first section I'll identify several types of data that can be organized in a spreadsheet. These data "types" can be thought of as different categories of observational units, so they will each be represented in a different table within that spreadsheet.
+
+In the second section I'll go into details of how to manage citable works and use free software to track those and render them directly into your CV.
+
+I'll post a follow up, standalone blog for transferring the data we compile in this blog post to a rendered PDF output of a CV.
+
+### A couple of notes before diving in
+
+To non-R users, the advice I have for structuring CV records, which relates to principles of tidy data and freely available citation managers, will be useful whether or not you eventually work with your data in R. If you have no intention of using R to construct your CV, the content of this blog can still be useful.
+
+Throughout this document I will strongly encourage documenting the most specific form of data that you can for any given type. A good example is recording the specific date when a degree was conferred. Although it's not conventional to include this level of specificity on a CV, there are times when you may need it, particularly for actual job applications. If you have the specific date it is trivial to convert that to a more conventionally used format, such as Month-Year, but it can be unnecessarily painful to dig through records and find the actual date your degree was conferred.
+
+## Flat File CV Data Types
+
+As I walk through the data types, each sub-header will represent a different table name that corresponds to a distinct tab that will go into the spreadsheet, and then I'll discuss the variables that will be added as columns within those tables.
+
+### Personal Identifiers
+
+At the beginning of pretty much any CV, you'll find some combination of personally identifying information. These fields are typically defined in the RMarkdown format under something called a YAML header. More on that later, but know that the `vitae` package uses RMarkdown magic to take these headers and make them look awesome in a PDF output. For now, let's discuss a list of things we might want to keep track of for this:
+
+-   name
+-   surname
+-   position
+-   company/organization
+-   phone
+-   email
+-   mailing address
+-   github
+-   website
+-   ORCID
+-   google scholar
+-   linkedin
+-   researchgate
+-   bluesky
+-   instagram
+-   pronouns
+
+### Education
+
+This is another core piece of information that you'll want to have good records for. Some of these will likely not apply to your degree, and in that case those fields can just be left blank.
+
+-   Degree
+-   Major
+-   Emphasis
+-   Specialization
+-   Minor
+-   Completion Date
+-   Institution
+-   Institution Street Address
+-   Institution City
+-   Institution State
+-   Institution Zip
+-   Primary Advisor
+-   Secondary Advisor
+-   Thesis title
+
+### Work Experience
+
+For this section of your CV it is preferrable to ue a little bit different structure to it than others. The reason for this is that some of the fields will have related data. For example, a common approach is to have what amounts to a header that describes some specifics of a job such as the title, company or agency, and date range, among others. In addition to those, a bulleted list describing tasks, responsibilities, and accomplishments is often included below a header with the job specifics. My recommendation for storing these data is to construct separate related tables for fields that represent nested data. For work experience, I ended up treating two different variables in this way. The first was the job details, and the other was references. There is also an argument to be made to keep the metadata of each company in a related table, but in my opinion there wasn't much of a benefit to doing that for this application.
+
+So, for the actual work experience table, I included:
+
+-   title
+-   company
+-   company_address
+-   company_city
+-   company_state
+-   company_zip
+-   start_date
+-   end_date
+-   starting_rate_hourly
+-   ending_rate_hourly
+-   hours_per_week
+
+#### Work Details
+
+So for the work details, which will be related to the work experience table by title and company, I simply included:
+
+-   title
+-   company
+-   task
+
+#### References
+
+And for references, columns included:
+
+-   first name
+-   last name
+-   title
+-   relationship (E.g. supervisor, coworker, advisor)
+-   company
+-   phone
+-   email
+-   retired (T/F)
+-   ok_to_contact (T/F)
+
+The first will contain information relating to the specifics of the job, and the other will have the tasks, responsibilities and accomplishments associated with that job. It is important to structure these tables in a way that each position you've held can be uniquely identified. My approach to that has been to include both the job title and company name in both tables.
