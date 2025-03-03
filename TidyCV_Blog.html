@@ -88,14 +88,37 @@ div.csl-indent {
 <script src="TidyCV_Blog_files/libs/bootstrap/bootstrap.min.js"></script>
 <link href="TidyCV_Blog_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="TidyCV_Blog_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="TidyCV_Blog_files/libs/tabwid-1.1.3/tabwid.css" rel="stylesheet">
+<script src="TidyCV_Blog_files/libs/tabwid-1.1.3/tabwid.js"></script>
 
 
 </head>
 
-<body class="fullcontent">
+<body>
 
 <div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
-
+<div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+  <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#background" id="toc-background" class="nav-link active" data-scroll-target="#background">Background</a>
+  <ul class="collapse">
+  <li><a href="#a-couple-of-notes-before-diving-in" id="toc-a-couple-of-notes-before-diving-in" class="nav-link" data-scroll-target="#a-couple-of-notes-before-diving-in">A couple of notes before diving in</a></li>
+  </ul></li>
+  <li><a href="#cv-data-types" id="toc-cv-data-types" class="nav-link" data-scroll-target="#cv-data-types">CV Data Types</a>
+  <ul class="collapse">
+  <li><a href="#personal-identifiers" id="toc-personal-identifiers" class="nav-link" data-scroll-target="#personal-identifiers">Personal Identifiers</a></li>
+  <li><a href="#education" id="toc-education" class="nav-link" data-scroll-target="#education">Education</a></li>
+  <li><a href="#work-experience" id="toc-work-experience" class="nav-link" data-scroll-target="#work-experience">Work Experience</a></li>
+  </ul></li>
+  <li><a href="#citations" id="toc-citations" class="nav-link" data-scroll-target="#citations">Citations</a>
+  <ul class="collapse">
+  <li><a href="#peer-reviewed-publications" id="toc-peer-reviewed-publications" class="nav-link" data-scroll-target="#peer-reviewed-publications">Peer-reviewed publications</a></li>
+  </ul></li>
+  </ul>
+</nav>
+</div>
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
@@ -123,14 +146,7 @@ div.csl-indent {
 </header>
 
 
-<section id="background" class="level2">
-<h2 class="anchored" data-anchor-id="background">Background</h2>
-<p>I’m writing this blog post less than two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that many do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in a hodge podge of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.</p>
-<p>Now that I had a little bit of time to update my materials, I started thinking about how I could make it easier on myself in the future. Over the last few years I’ve moved essentially all of my workflows into the R environment, and I thought there must be something there to help with this problem. As expected, the R community did not disappoint and I quickly found the excellent <code>vitae</code> package which provides useful, easy-to-understand functions for constructing elements of a CV, as well as some sharp-looking templates for rendering to a PDF document.</p>
-<p>Pretty much as soon as I discovered <code>vitae</code> I started converting my existing, awful looking CV that lived in a Microsoft Word document over to a markdown file.</p>
-<p>What I started to notice is that there are a few types of data, and common structures to those data that feed into the elements that a natural resource professional would want to include in their CV. The examples from the vitae package store much of this information within the markdown file that is then eventually rendered to a PDF. Something like the following for storing records of education.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -141,14 +157,48 @@ div.csl-indent {
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
+
+Attaching package: 'vitae'
+
+
+The following object is masked from 'package:stats':
+
+    filter
+
+
+
+Attaching package: 'flextable'
+
+
+The following object is masked from 'package:purrr':
+
+    compose</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>education.dat <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Degree, <span class="sc">~</span> Year, <span class="sc">~</span> Institution, <span class="sc">~</span> Where,</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Doctor of Philosophy, Wildlife and Fisheries Sciences"</span>, <span class="st">"2018"</span>, <span class="st">"South Dakota State University"</span>, <span class="st">"Brookings, SD"</span>,</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Master of Science, Wildlife and Fisheries Sciences"</span>, <span class="st">"2013"</span>, <span class="st">"South Dakota State University"</span>, <span class="st">"Brookings, SD"</span>,</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Bachelor of Science, Biology"</span>, <span class="st">"2010"</span>, <span class="st">"University of Wisconsin-Oshkosh"</span>, <span class="st">"Oshkosh, WI"</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="background" class="level2">
+<h2 class="anchored" data-anchor-id="background">Background</h2>
+<p>I’m writing this blog post two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that many do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in an amalgam of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.</p>
+<p>Now that I had a little bit of time to update my materials, I started thinking about how I could make it easier on myself in the future. Over the last few years I’ve moved essentially all of my workflows into the R environment, and I thought there must be something there to help with this problem. As expected, the R community did not disappoint and I quickly found the excellent <code>vitae</code> package <span class="citation" data-cites="vitae">(<a href="#ref-vitae" role="doc-biblioref">O’Hara-Wild and Hyndman 2024</a>)</span> which provides useful, easy-to-understand functions for constructing elements of a CV, as well as some sharp-looking templates for rendering to a PDF document.</p>
+<p>Pretty much as soon as I discovered <code>vitae</code> I started converting my existing, awful looking CV that lived in a Microsoft Word document over to a markdown file.</p>
+<p>What I started to notice is that there are a few types of data, and common structures to those data that feed into the elements that a natural resource professional would want to include in their CV. The examples from <code>vitae</code> vignettes store much of this information within the markdown file that is then eventually rendered to a PDF. Something like the following for storing records of education.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>education.dat <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span> Degree, <span class="sc">~</span> Year, <span class="sc">~</span> Institution, <span class="sc">~</span> Where,</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Doctor of Philosophy, Wildlife and Fisheries Sciences"</span>, <span class="st">"2018"</span>, <span class="st">"South Dakota State University"</span>, <span class="st">"Brookings, SD"</span>,</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Master of Science, Wildlife and Fisheries Sciences"</span>, <span class="st">"2013"</span>, <span class="st">"South Dakota State University"</span>, <span class="st">"Brookings, SD"</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Bachelor of Science, Biology"</span>, <span class="st">"2010"</span>, <span class="st">"University of Wisconsin-Oshkosh"</span>, <span class="st">"Oshkosh, WI"</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This constructs a data frame that is structured like this:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>education.dat <span class="sc">%&gt;%</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">flextable</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div class="tabwid"><style>.cl-d42c042c{}.cl-d429c978{font-family:'Helvetica';font-size:11pt;font-weight:normal;font-style:normal;text-decoration:none;color:rgba(0, 0, 0, 1.00);background-color:transparent;}.cl-d42aafe6{margin:0;text-align:left;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);padding-bottom:5pt;padding-top:5pt;padding-left:5pt;padding-right:5pt;line-height: 1;background-color:transparent;}.cl-d42ab914{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 1.5pt solid rgba(102, 102, 102, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-d42ab915{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 0 solid rgba(0, 0, 0, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}.cl-d42ab91e{width:0.75in;background-color:transparent;vertical-align: middle;border-bottom: 1.5pt solid rgba(102, 102, 102, 1.00);border-top: 0 solid rgba(0, 0, 0, 1.00);border-left: 0 solid rgba(0, 0, 0, 1.00);border-right: 0 solid rgba(0, 0, 0, 1.00);margin-bottom:0;margin-top:0;margin-left:0;margin-right:0;}</style><table data-quarto-disable-processing="true" class="cl-d42c042c"><thead><tr style="overflow-wrap:break-word;"><th class="cl-d42ab914"><p class="cl-d42aafe6"><span class="cl-d429c978">Degree</span></p></th><th class="cl-d42ab914"><p class="cl-d42aafe6"><span class="cl-d429c978">Year</span></p></th><th class="cl-d42ab914"><p class="cl-d42aafe6"><span class="cl-d429c978">Institution</span></p></th><th class="cl-d42ab914"><p class="cl-d42aafe6"><span class="cl-d429c978">Where</span></p></th></tr></thead><tbody><tr style="overflow-wrap:break-word;"><td class="cl-d42ab915"><p class="cl-d42aafe6"><span class="cl-d429c978">Doctor of Philosophy, Wildlife and Fisheries Sciences</span></p></td><td class="cl-d42ab915"><p class="cl-d42aafe6"><span class="cl-d429c978">2018</span></p></td><td class="cl-d42ab915"><p class="cl-d42aafe6"><span class="cl-d429c978">South Dakota State University</span></p></td><td class="cl-d42ab915"><p class="cl-d42aafe6"><span class="cl-d429c978">Brookings, SD</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-d42ab915"><p class="cl-d42aafe6"><span class="cl-d429c978">Master of Science, Wildlife and Fisheries Sciences</span></p></td><td class="cl-d42ab915"><p class="cl-d42aafe6"><span class="cl-d429c978">2013</span></p></td><td class="cl-d42ab915"><p class="cl-d42aafe6"><span class="cl-d429c978">South Dakota State University</span></p></td><td class="cl-d42ab915"><p class="cl-d42aafe6"><span class="cl-d429c978">Brookings, SD</span></p></td></tr><tr style="overflow-wrap:break-word;"><td class="cl-d42ab91e"><p class="cl-d42aafe6"><span class="cl-d429c978">Bachelor of Science, Biology</span></p></td><td class="cl-d42ab91e"><p class="cl-d42aafe6"><span class="cl-d429c978">2010</span></p></td><td class="cl-d42ab91e"><p class="cl-d42aafe6"><span class="cl-d429c978">University of Wisconsin-Oshkosh</span></p></td><td class="cl-d42ab91e"><p class="cl-d42aafe6"><span class="cl-d429c978">Oshkosh, WI</span></p></td></tr></tbody></table></div>
+</div>
 </div>
 <p>This format is tailored to feed into the <code>vitae</code> package functions, specifically the <code>brief_entries()</code> and <code>detailed_entries()</code> functions that expect arguments for what, when, with, where, and why. This is a very good way to conceptualize the elements of a CV, but storing data specifically in this format means that the underlying information associated with your professional history is summarized and is not tidy <span class="citation" data-cites="wickham2014">(<a href="#ref-wickham2014" role="doc-biblioref">Wickham 2014</a>)</span>.</p>
 <p>If you’re not familiar with the concept of tidy data, the basic principle is that when you’re organizing tabular data every row should represent an observation, every column should represent a variable, and each type of observational unit should have its own table <span class="citation" data-cites="wickham2014">(<a href="#ref-wickham2014" role="doc-biblioref">Wickham 2014</a>)</span>. The table of education in the snippet of code above shows a good example of untidy data. For example. the “Degree” column has multiple variables which would be more correctly identified as degree (Doctor of Philosophy) and major (Wildlife and Fisheries Sciences). The benefits of organizing data according to these principles are difficult to overstate.</p>
@@ -164,21 +214,140 @@ div.csl-indent {
 </ol>
 <p>In the first section I’ll identify several types of data that can be organized in a spreadsheet. These data “types” can be thought of as different categories of observational units, so they will each be represented in a different table within that spreadsheet.</p>
 <p>In the second section I’ll go into details of how to manage citable works and use free software to track those and render them directly into your CV.</p>
+<p>I’ll post a follow up, standalone blog for transferring the data we compile in this blog post to a rendered PDF output of a CV.</p>
 <section id="a-couple-of-notes-before-diving-in" class="level3">
 <h3 class="anchored" data-anchor-id="a-couple-of-notes-before-diving-in">A couple of notes before diving in</h3>
 <p>To non-R users, the advice I have for structuring CV records, which relates to principles of tidy data and freely available citation managers, will be useful whether or not you eventually work with your data in R. If you have no intention of using R to construct your CV, the content of this blog can still be useful.</p>
 <p>Throughout this document I will strongly encourage documenting the most specific form of data that you can for any given type. A good example is recording the specific date when a degree was conferred. Although it’s not conventional to include this level of specificity on a CV, there are times when you may need it, particularly for actual job applications. If you have the specific date it is trivial to convert that to a more conventionally used format, such as Month-Year, but it can be unnecessarily painful to dig through records and find the actual date your degree was conferred.</p>
 </section>
 </section>
-<section id="flat-file-cv-data-types" class="level2">
-<h2 class="anchored" data-anchor-id="flat-file-cv-data-types">Flat File CV Data Types</h2>
-<section id="personal-identifiers" class="level3 unnumbered">
-
+<section id="cv-data-types" class="level2">
+<h2 class="anchored" data-anchor-id="cv-data-types">CV Data Types</h2>
+<p>As I walk through the data types, each sub-header will represent a different table name that corresponds to a distinct tab that will go into the spreadsheet, and then I’ll discuss the variables that will be added as columns within those tables.</p>
+<p>So, the types that can be standalone tables include:</p>
+<ul>
+<li>Personal identifiers</li>
+<li>Education</li>
+<li>Service</li>
+<li>Peer reviews</li>
+<li>Awards/Recognition</li>
+<li></li>
+</ul>
+<p>The types with related sub-tables include:</p>
+<ul>
+<li><p>Work</p>
+<ul>
+<li>Work Details</li>
+<li>References</li>
+</ul></li>
+</ul>
+<section id="personal-identifiers" class="level3">
+<h3 class="anchored" data-anchor-id="personal-identifiers">Personal Identifiers</h3>
+<p>At the beginning of pretty much any CV, you’ll find some combination of personally identifying information. These fields are typically defined in the RMarkdown format under something called a YAML header. More on that later, but know that the <code>vitae</code> package uses RMarkdown magic to take these headers and make them look awesome in a PDF output. For now, let’s discuss a list of things we might want to keep track of for this:</p>
+<ul>
+<li>name</li>
+<li>surname</li>
+<li>position</li>
+<li>company/organization</li>
+<li>phone</li>
+<li>email</li>
+<li>mailing address</li>
+<li>github</li>
+<li>website</li>
+<li>ORCID</li>
+<li>google scholar</li>
+<li>linkedin</li>
+<li>researchgate</li>
+<li>bluesky</li>
+<li>instagram</li>
+<li>pronouns</li>
+</ul>
+</section>
+<section id="education" class="level3">
+<h3 class="anchored" data-anchor-id="education">Education</h3>
+<p>This is another core piece of information that you’ll want to have good records for. Some of these will likely not apply to your degree, and in that case those fields can just be left blank.</p>
+<ul>
+<li>Degree</li>
+<li>Major</li>
+<li>Emphasis</li>
+<li>Specialization</li>
+<li>Minor</li>
+<li>Completion Date</li>
+<li>Institution</li>
+<li>Institution Street Address</li>
+<li>Institution City</li>
+<li>Institution State</li>
+<li>Institution Zip</li>
+<li>Primary Advisor</li>
+<li>Secondary Advisor</li>
+<li>Thesis title</li>
+</ul>
+</section>
+<section id="work-experience" class="level3">
+<h3 class="anchored" data-anchor-id="work-experience">Work Experience</h3>
+<p>For this section of your CV it is preferrable to ue a little bit different structure to it than others. The reason for this is that some of the fields will have related data. For example, a common approach is to have what amounts to a header that describes some specifics of a job such as the title, company or agency, and date range, among others. In addition to those, a bulleted list describing tasks, responsibilities, and accomplishments is often included below a header with the job specifics. My recommendation for storing these data is to construct separate related tables for fields that represent nested data. For work experience, I ended up treating two different variables in this way. The first was the job details, and the other was references. There is also an argument to be made to keep the metadata of each company in a related table, but in my opinion there wasn’t much of a benefit to doing that for this application.</p>
+<p>So, for the actual work experience table, I included:</p>
+<ul>
+<li>title</li>
+<li>company</li>
+<li>company_address</li>
+<li>company_city</li>
+<li>company_state</li>
+<li>company_zip</li>
+<li>start_date</li>
+<li>end_date</li>
+<li>starting_rate_hourly</li>
+<li>ending_rate_hourly</li>
+<li>hours_per_week</li>
+</ul>
+<section id="work-details" class="level4">
+<h4 class="anchored" data-anchor-id="work-details">Work Details</h4>
+<p>So for the work details, which will be related to the work experience table by title and company, I simply included:</p>
+<ul>
+<li>title</li>
+<li>company</li>
+<li>task</li>
+</ul>
+</section>
+<section id="references" class="level4">
+<h4 class="anchored" data-anchor-id="references">References</h4>
+<p>And for references, columns included:</p>
+<ul>
+<li>first name</li>
+<li>last name</li>
+<li>title</li>
+<li>relationship (E.g. supervisor, coworker, advisor)</li>
+<li>company</li>
+<li>phone</li>
+<li>email</li>
+<li>retired (T/F)</li>
+<li>ok_to_contact (T/F)</li>
+</ul>
+<p>The first will contain information relating to the specifics of the job, and the other will have the tasks, responsibilities and accomplishments associated with that job. It is important to structure these tables in a way that each position you’ve held can be uniquely identified. My approach to that has been to include both the job title and company name in both tables.</p>
+</section>
+</section>
+</section>
+<section id="citations" class="level2">
+<h2 class="anchored" data-anchor-id="citations">Citations</h2>
+<p>Now we move into a special category of data. Anything that might be cited - e.g.&nbsp;peer-reviewed publications, technical reports, presentations, software - has established guidelines and associated software to conform to those guidelines. I strongly recommend tracking your personal records in a citation manager. Personally, I’ve found <a href="https://www.zotero.org">Zotero</a> to be exceptional. It’s free, syncs with an online account, allows you to attach full text copies, and integrates seamlessly with RMarkdown. My recommendation is to store any of your work that can be used as a citation into your Zotero library, and attach a full-text copy if at all possible. This advice applies outside of publications as well - for example, if you give a presentation in PowerPoint you can print your slides to a PDF and attach to the citation in Zotero.</p>
+<p>The format most commonly used for creating bibliographies in a markdown environment is BibTex which is a plain-text file saved as a “.bib” extension. Exporting from Zotero to a bibtex file is very simple, and we’ll touch on that later in this section.</p>
+<p>Zotero has the capacity to house a wide range of research outputs, but for the purposes of this blog I’m going to stick to the categories I would typically include in a CV I’m using to apply to a fisheries job, which include:</p>
+<ul>
+<li>Peer-reviewed publications</li>
+<li>Technical reports</li>
+<li>Conference presentations</li>
+</ul>
+<section id="peer-reviewed-publications" class="level3">
+<h3 class="anchored" data-anchor-id="peer-reviewed-publications">Peer-reviewed publications</h3>
+<p>These are classified as “Journal Article” under the item type field in Zotero. The relevant fields to go with a citation can be entered manually, or imported via the DOI. Typically, for managing references in general I copy the DOI and paste it into</p>
 
 </section>
 </section>
 
-<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">Personal Identifiers</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-vitae" class="csl-entry" role="listitem">
+O’Hara-Wild, Mitchell, and Rob Hyndman. 2024. <span>“Vitae: Curriculum Vitae for r Markdown.”</span> <a href="https://CRAN.R-project.org/package=vitae">https://CRAN.R-project.org/package=vitae</a>.
+</div>
 <div id="ref-wickham2014" class="csl-entry" role="listitem">
 Wickham, Hadley. 2014. <span>“Tidy Data.”</span> <em>Journal of Statistical Software</em> 59: 1–23. <a href="https://www.jstatsoft.org/article/view/v059i10/0">https://www.jstatsoft.org/article/view/v059i10/0</a>.
 </div>

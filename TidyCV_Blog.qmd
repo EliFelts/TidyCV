@@ -4,17 +4,35 @@ author: "Eli Felts"
 format: html
 editor: visual
 bibliography: references.bib
+toc: true
 ---
+
+```{r options, echo=FALSE}
+
+knitr::opts_chunk$set(
+  message=FALSE,
+  warning=FALSE,
+  fig.width=6.5,
+  fig.height=6,
+  cache = TRUE,
+  dev="png"
+)
+
+library(tidyverse)
+library(vitae)
+library(flextable)
+
+```
 
 ## Background
 
-I'm writing this blog post two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that many do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in a hodge podge of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.
+I'm writing this blog post two weeks after being illegally fired as part of the nationwide termination of federal probationary employees. I had been in my position for ten months, and the furthest thing from my mind was keeping my CV up-to-date. As such, I found myself in a position that many do when they are in need of updating. That is, my most recent CV consisted of my application materials for the most recent job I applied for. That version lived in an amalgam of formats that were tailored to the specific job for which it was constructed. Similarly, some of the pieces of information within the CV were adjusted to match keywords in the job posting, and others were included because they were specified in the job application guidance.
 
-Now that I had a little bit of time to update my materials, I started thinking about how I could make it easier on myself in the future. Over the last few years I've moved essentially all of my workflows into the R environment, and I thought there must be something there to help with this problem. As expected, the R community did not disappoint and I quickly found the excellent `vitae` package which provides useful, easy-to-understand functions for constructing elements of a CV, as well as some sharp-looking templates for rendering to a PDF document.
+Now that I had a little bit of time to update my materials, I started thinking about how I could make it easier on myself in the future. Over the last few years I've moved essentially all of my workflows into the R environment, and I thought there must be something there to help with this problem. As expected, the R community did not disappoint and I quickly found the excellent `vitae` package [@vitae] which provides useful, easy-to-understand functions for constructing elements of a CV, as well as some sharp-looking templates for rendering to a PDF document.
 
 Pretty much as soon as I discovered `vitae` I started converting my existing, awful looking CV that lived in a Microsoft Word document over to a markdown file.
 
-What I started to notice is that there are a few types of data, and common structures to those data that feed into the elements that a natural resource professional would want to include in their CV. The examples from the vitae package store much of this information within the markdown file that is then eventually rendered to a PDF. Something like the following for storing records of education.
+What I started to notice is that there are a few types of data, and common structures to those data that feed into the elements that a natural resource professional would want to include in their CV. The examples from `vitae` vignettes store much of this information within the markdown file that is then eventually rendered to a PDF. Something like the following for storing records of education.
 
 ```{r vitae_example}
 
@@ -29,7 +47,15 @@ education.dat <- tribble(
 
 ```
 
-This format is tailored to feed into the `vitae` package functions, specifically the `brief_entries()` and `detailed_entries()` functions that expect arguments for what, when, with, where, and why. This is a very good way to conceptualize the elements of a CV, but storing data specifically in this format means that the underlying information associated with your professional history is summarized and is not tidy [@wickham2014].
+This constructs a data frame that is structured like this:
+
+```{r}
+education.dat %>% 
+  flextable()
+
+```
+
+This format is tailored to feed into `vitae` functions, specifically the `brief_entries()` and `detailed_entries()` functions that expect arguments for what, when, with, where, and why. This is a very good way to conceptualize the elements of a CV, but storing data specifically in this format means that the underlying information associated with your professional history is summarized and is not tidy [@wickham2014].
 
 If you're not familiar with the concept of tidy data, the basic principle is that when you're organizing tabular data every row should represent an observation, every column should represent a variable, and each type of observational unit should have its own table [@wickham2014]. The table of education in the snippet of code above shows a good example of untidy data. For example. the "Degree" column has multiple variables which would be more correctly identified as degree (Doctor of Philosophy) and major (Wildlife and Fisheries Sciences). The benefits of organizing data according to these principles are difficult to overstate.
 
@@ -38,14 +64,14 @@ The application to records representing your CV is a little bit of an unusual ap
 1.  I have yet to find a case where organizing information in tidy data format wasn't enormously beneficial
 2.  I'm currently unemployed so I frankly have the time to do it
 
-My goal with this blog post is to identify some core data types that are associated with CVs, and provide some recommendations and a spreadsheet template for others to use. As I worked through my own CV update I realized there were two broad categories of information that needed to be split:
+My goal with this blog post is to identify some core data types that are associated with CVs, and provide recommendations for others to use. As I worked through my own CV update I realized there were two broad categories of information that needed to be split:
 
 1.  Basic information that can live in a flat file like a spreadsheet
-2.  Citable works such as peer-reviewed publications that have specific guidelines from publishers about formatting as well as softwares developed around those formatting guidelines.
+2.  Works such as peer-reviewed publications that are cited in research and have specific guidelines from publishers about formatting.
 
-In the first section I'll identify several types of data that can be organized in a spreadsheet. These data "types" can be thought of as different categories of observational units, so they will each be represented in a different table within that spreadsheet.
+In the first section I'll identify several types of data that can be easily organized and stored in a spreadsheet. These data "types" can be thought of as different categories of observational units, so they will each be represented in a different table within that spreadsheet.
 
-In the second section I'll go into details of how to manage citable works and use free software to track those and render them directly into your CV.
+In the second section I'll go into details of how to manage cited works using free software.
 
 I'll post a follow up, standalone blog for transferring the data we compile in this blog post to a rendered PDF output of a CV.
 
@@ -55,9 +81,36 @@ To non-R users, the advice I have for structuring CV records, which relates to p
 
 Throughout this document I will strongly encourage documenting the most specific form of data that you can for any given type. A good example is recording the specific date when a degree was conferred. Although it's not conventional to include this level of specificity on a CV, there are times when you may need it, particularly for actual job applications. If you have the specific date it is trivial to convert that to a more conventionally used format, such as Month-Year, but it can be unnecessarily painful to dig through records and find the actual date your degree was conferred.
 
-## Flat File CV Data Types
+In the interest of brevity I've limited the data types in this blog post to those that a typical early-career natural resource professional would have as part of their CV. An academic applying for a faculty position will have many more data types such as funding awards, teaching experience, and mentored students. My aim is for the breadth of data types included here to provide a good template for an early career professional, and an easily extensible template for an academic of more specialized person to extend to fit their needs. With that said, I'm open to suggestions and happy to edit when necessary, so if you think something is missing or should be structured differently please create an issue on the GitHub page.
 
-As I walk through the data types, each sub-header will represent a different table name that corresponds to a distinct tab that will go into the spreadsheet, and then I'll discuss the variables that will be added as columns within those tables.
+## Spreadsheet Data 
+
+I mentioned above that basic information can live in a spreadsheet. While that's true, I do recommend in some instances using related tables to reduce redundancy and simplify organization. I'll first walk through stand alone data types and then talk about linking through related tables. If that sounds like gibberish right now, stick with it and I think the examples in that section will make it click.
+
+### Standalone data types
+
+In the template spreadsheet that accompanies this post you can find an exhaustive list of the variables that may be relevant for each of these table types. Note that when you're filling in your information you will likely not have anything for many of those variables, and you can simply leave those blank.
+
+The standalone data types I've identified include
+
+-   Personal identifiers (name, address, email, LinkedIN account, etc.)
+
+-   Education
+
+-   Professional memberships (e.g. American Fisheries Society)
+
+-   Awards/Recognition
+
+-   Software competencies: I'll note here that this was an aspect of my CV that I was uncertain of how to structure to best communicate to employers what I can do. The way I have it for now is to list the program (e.g. R) or platform (Microsoft Office) and have associated bullet points summarizing my competencies in those applications. I tried to make it so those bullet points described in plain english the categories of tasks that I could accomplish, especially within the R environment. For me, it was especially tricky when it comes to summarizing competencies around R. This is partly due to the vast amount of things that can be done in R, and partly because I was somewhat trying to guess what hiring managers may understand about R. For example, my guess is that most people in fisheries have at least some familiarity with R Shiny at this point, so I wanted to highlight that competency in particular. On the other hand, I use `leaflet` and `sf` extensively for working with spatial data, but I have a hunch that a fair amount of fisheries people don't know what those are, so I simply kept a bullet point that indicates I know how to use R for spatial data analysis (i.e. `sf`) and mapping (i.e. `leaflet`). Obviously, by the amount of rambling here I am unsure on this topic, so please let me know what you think!
+
+### Relational Data
+
+The types with related sub-tables include:
+
+-   Work
+
+    -   Work Details
+    -   References
 
 ### Personal Identifiers
 
@@ -140,3 +193,19 @@ And for references, columns included:
 -   ok_to_contact (T/F)
 
 The first will contain information relating to the specifics of the job, and the other will have the tasks, responsibilities and accomplishments associated with that job. It is important to structure these tables in a way that each position you've held can be uniquely identified. My approach to that has been to include both the job title and company name in both tables.
+
+## Citations
+
+Now we move into a special category of data. Anything that might be cited - e.g. peer-reviewed publications, technical reports, presentations, software - has established guidelines and associated software to conform to those guidelines. I strongly recommend tracking your personal records in a citation manager. Personally, I've found [Zotero](https://www.zotero.org) to be exceptional. It's free, syncs with an online account, allows you to attach full text copies, and integrates seamlessly with RMarkdown. My recommendation is to store any of your work that can be used as a citation into your Zotero library, and attach a full-text copy if at all possible. This advice applies outside of publications as well - for example, if you give a presentation in PowerPoint you can print your slides to a PDF and attach to the citation in Zotero.
+
+The format most commonly used for creating bibliographies in a markdown environment is BibTex which is a plain-text file saved as a ".bib" extension. Exporting from Zotero to a bibtex file is very simple, and we'll touch on that later in this section.
+
+Zotero has the capacity to house a wide range of research outputs, but for the purposes of this blog I'm going to stick to the categories I would typically include in a CV I'm using to apply to a fisheries job, which include:
+
+-   Peer-reviewed publications
+-   Technical reports
+-   Conference presentations
+
+### Peer-reviewed publications
+
+These are classified as "Journal Article" under the item type field in Zotero. The relevant fields to go with a citation can be entered manually, or imported via the DOI. Typically, for managing references in general I copy the DOI and paste it into
