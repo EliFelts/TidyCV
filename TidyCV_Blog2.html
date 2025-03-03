@@ -55,7 +55,27 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-</style>
+/* CSS for citations */
+div.csl-bib-body { }
+div.csl-entry {
+  clear: both;
+  margin-bottom: 0em;
+}
+.hanging-indent div.csl-entry {
+  margin-left:2em;
+  text-indent:-2em;
+}
+div.csl-left-margin {
+  min-width:2em;
+  float:left;
+}
+div.csl-right-inline {
+  margin-left:2em;
+  padding-left:1em;
+}
+div.csl-indent {
+  margin-left: 2em;
+}</style>
 
 
 <script src="TidyCV_Blog2_files/libs/clipboard/clipboard.min.js"></script>
@@ -104,16 +124,6 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <div class="cell">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">message=</span><span class="cn">FALSE</span>,</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">warning=</span><span class="cn">FALSE</span>,</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">fig.width=</span><span class="fl">6.5</span>,</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">fig.height=</span><span class="dv">6</span>,</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">cache =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">dev=</span><span class="st">"png"</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
 ✔ dplyr     1.1.4     ✔ readr     2.1.5
@@ -124,39 +134,93 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
 ✖ dplyr::filter() masks stats::filter()
 ✖ dplyr::lag()    masks stats::lag()
-ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vitae)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>
+ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors
+
 Attaching package: 'vitae'
+
 
 The following object is masked from 'package:stats':
 
-    filter</code></pre>
-</div>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(conflicted)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RefManageR)</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">conflicts_prefer</span>(dplyr<span class="sc">::</span><span class="fu">filter</span>(),</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                 dplyr<span class="sc">::</span><span class="fu">lag</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-stderr">
-<pre><code>[conflicted] Will prefer dplyr::filter over any other package.
+    filter
+
+
+[conflicted] Will prefer dplyr::filter over any other package.
 [conflicted] Will prefer dplyr::lag over any other package.</code></pre>
 </div>
 </div>
-<section id="personal-identifiers" class="level2">
-<h2 class="anchored" data-anchor-id="personal-identifiers">Personal Identifiers</h2>
-<p>In the markdown format, these will go in a specialized part called the YAML header.</p>
+<section id="initial-steps" class="level1">
+<h1>Initial Steps</h1>
+<p>To generate PDF documents from RMarkdown you will need to setup something called LaTeX on your local machine. You can do so using the <code>tinytex</code> package <span class="citation" data-cites="tinytex">(<a href="#ref-tinytex" role="doc-biblioref">Xie 2025</a>)</span> with the following code.</p>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>test_dat <span class="ot">&lt;-</span> <span class="fu">tribble</span>(<span class="sc">~</span>gh,<span class="st">"EliFelts"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>tinytex<span class="sc">::</span><span class="fu">install_tinytex</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<hr>
-<p>title: “test”</p>
-<hr>
+<p>You will only have to do this once. Now, to use templates from <code>vitae</code> make sure to install that package as well. You can do so from the RStudio menu by clicking Tools -&gt; Install Packages and searching for <code>vitae</code>, or simply run the following code.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"vitae"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="starting-from-template" class="level1">
+<h1>Starting from template</h1>
+<p>To start off, open a new RMarkdown file and on the left of the dialog box you will have an option to select “From Template”. This will show templates that are available from the <code>vitae</code> package. To view examples of these templates check out the <a href="https://github.com/mitchelloharawild/vitae?tab=readme-ov-file" target="_blank">README</a>, and if you’re interested in learning how to make your own custom template see <a href="https://pkg.mitchelloharawild.com/vitae/articles/extending.html" target="_blank">this vignette.</a> For my purposes, I thought the “awesomecv” template looked good so for this exercise select that option which will show up as “Curriculum Vitae (Awesome-CV format)”. Now you will be in an RMarkdown file that is populated with the Marie Curie example.</p>
+</section>
+<section id="headers" class="level1">
+<h1>Headers</h1>
+<p>With any RMarkdown file, there will be a specialized code chunk at the beginning that is called a YAML header. This will define things like title, authors, etc. in a manuscript. It is also where you can set defaults for font types, colors, and bibliographies. In the template we’ve selected there are a number of options. For me, the things I wantedto include were name, surname (i.e.&nbsp;last name), position, address, phone, email, and date so I just deleted the fields that I didn’t want to keep and edited the remaining fields to contain my information. Make sure to leave the part that was already populated with information about the output. Also, note that the date is automatically generated to display the month and year at the time you run the code to produce the PDF. I thought this was a nice touch so I left that part intact. One other thing I wanted to adjust in the YAML header for now was the color of the text. In the template there is some red styling incorporated, and I just wanted everything to be black, so I defined the color with “headcolor” and a corresponding hexadecimal id (“414141”) that corresponds to black. You can change the headcolor to anything you want, and to see options for hexadecimal colors <a href="https://htmlcolorcodes.com" target="_ blank">click here</a>. Once I updated with my info and changed the header color to black, my YAML looked like this:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">name</span><span class="kw">:</span><span class="at"> Eli</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">surname</span><span class="kw">:</span><span class="at"> Felts</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">position</span><span class="kw">:</span><span class="at"> </span><span class="st">"Fisheries Biologist"</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">address</span><span class="kw">:</span><span class="at"> </span><span class="st">"20046 Ryegrass Lane, Lenore, Idaho 83541"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">phone</span><span class="kw">:</span><span class="at"> 605-695-1714</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">email</span><span class="kw">:</span><span class="at"> </span><span class="st">"elifelts@gmail.com"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> </span><span class="st">"March 2025"</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="fu">headcolor</span><span class="kw">:</span><span class="at"> </span><span class="dv">414141</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="fu">output</span><span class="kw">:</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="at">  vitae:</span><span class="fu">:awesomecv</span><span class="kw">:</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">page_total</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="code-options" class="level2">
+<h2 class="anchored" data-anchor-id="code-options">Code Options</h2>
+<p>In an RMarkdown file, R code is inserted in things called “chunks”. Within each chunk, there are several options that can be defined about what to do with that code. For example, sometimes you just want to display code for demonstration purposes and not actually run it, so you would include and argument <code>eval=FALSE</code> to define that you don’t want that code evaluated. A good practice is to set global options for an RMarkdown file at the beginning, and those are already present in this template using the syntax <code>knitr::opts_chunk$set()</code>. Leave these in the default settings, as this will make it so that your underlying code runs but associated warnings and messages don’t show up in the rendered PDF. Another thing I typically do in this initial setup is to load any necessary packages. The template already has <code>vitae</code> but we’ll also want <code>tidyverse</code> and <code>googlesheeets4</code> packages as well.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">FALSE</span>, <span class="at">warning =</span> <span class="cn">FALSE</span>, <span class="at">message =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vitae)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(googlesheets4)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we are ready to start linking to our spreadsheet. Right now I do that by defining the URL of my google sheet.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cv_url <span class="ot">&lt;-</span> <span class="st">"https://docs.google.com/spreadsheets/d/1DfPyPFa4xboyjm8dAbTzFnFTgo2oSbx0Auj1pa6RwAo/edit?gid=0#gid=0"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>This sets the location of the overall spreadsheet so that we don’t have to type the entire path every time we want to access it. Now we’ll move into the first section of our CV, which is education. To read in that particular sheet, we can just specify the sheet we want. We are also going to want to combine and reformat a couple of our columns to fit into the parameters of the <code>vitae</code> functions. For example, I wanted my degrees, which will be specified by the “what” argument in <code>detailed_entries</code> to display as both the degree (e.g.&nbsp;Bachelor of Science) and the major (e.g.&nbsp;Biology). To do this I’ll simply use <code>stringr::str_c()</code> to make a new column named “display_degree”. I will use this convention throughout this process with columns named “display_*” to identify columns that are constructed specifically to fit into the <code>vitae</code> functions and show exactly the information I want in the rendered PDF output. I’ll use a similar process to get just the year of degree completion and the institution (not actually changing anything). On other thing I want is for the institution state to be abbreviated. To accomplish this, I made a key that relates the full state names to abbreviations and joined those to the data frame when I read them in. That may sound like a lot, but this is all accomplished with the following code:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>state_key <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">institution_state=</span>state.name,</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">state=</span>state.abb)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>education.df <span class="ot">&lt;-</span> <span class="fu">read_sheet</span>(cv_url,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>                           <span class="at">sheet=</span><span class="st">"education"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(state_key,<span class="at">by=</span><span class="st">"institution_state"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">display_degree=</span><span class="fu">str_c</span>(degree,major,<span class="at">sep=</span><span class="st">", "</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>         <span class="at">display_year=</span><span class="fu">year</span>(completion_date),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>         <span class="at">display_institution=</span>institution,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>         <span class="at">display_where=</span><span class="fu">str_c</span>(institution_city,state,<span class="at">sep=</span><span class="st">", "</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we have converted our underlying data table to contain columns that fit perfectly into <code>vitae::detailed_entries()</code> as such:</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">detailed_entries</span>(education.df,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                 <span class="at">what=</span>display_degree,</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                 <span class="at">when=</span>display_year,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                 <span class="at">with=</span>display_institution,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>                 <span class="at">where=</span>display_where)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+
+</section>
 </section>
 
-</main>
+<div id="quarto-appendix" class="default"><section class="quarto-appendix-contents" role="doc-bibliography" id="quarto-bibliography"><h2 class="anchored quarto-appendix-heading">References</h2><div id="refs" class="references csl-bib-body hanging-indent" data-entry-spacing="0" role="list">
+<div id="ref-tinytex" class="csl-entry" role="listitem">
+Xie, Yihui. 2025. <span>“Tinytex: Helper Functions to Install and Maintain TeX Live, and Compile LaTeX Documents.”</span> <a href="https://github.com/rstudio/tinytex">https://github.com/rstudio/tinytex</a>.
+</div>
+</div></section></div></main>
 <!-- /main column -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {

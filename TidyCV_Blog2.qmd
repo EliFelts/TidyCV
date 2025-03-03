@@ -6,7 +6,7 @@ editor: visual
 bibliography: references.bib
 ---
 
-```{r options echo=FALSE}
+```{r options, echo=FALSE}
 
 knitr::opts_chunk$set(
   message=FALSE,
@@ -40,7 +40,7 @@ tinytex::install_tinytex()
 
 You will only have to do this once. Now, to use templates from `vitae` make sure to install that package as well. You can do so from the RStudio menu by clicking Tools -\> Install Packages and searching for `vitae`, or simply run the following code.
 
-```{r}
+```{r eval=FALSE}
 
 install.packages("vitae")
 
@@ -48,4 +48,73 @@ install.packages("vitae")
 
 # Starting from template
 
-To start off, open a new RMarkdown file and on the left of the dialog box you will have an option to select "From Template". This will show templates that are available from the `vitae` package. To view examples of these templates check out the [README](https://github.com/mitchelloharawild/vitae?tab=readme-ov-file){target="_blank"} for the package.
+To start off, open a new RMarkdown file and on the left of the dialog box you will have an option to select "From Template". This will show templates that are available from the `vitae` package. To view examples of these templates check out the [README](https://github.com/mitchelloharawild/vitae?tab=readme-ov-file){target="_blank"}, and if you're interested in learning how to make your own custom template see [this vignette.](https://pkg.mitchelloharawild.com/vitae/articles/extending.html){target="_blank"} For my purposes, I thought the "awesomecv" template looked good so for this exercise select that option which will show up as "Curriculum Vitae (Awesome-CV format)". Now you will be in an RMarkdown file that is populated with the Marie Curie example.
+
+# Headers
+
+With any RMarkdown file, there will be a specialized code chunk at the beginning that is called a YAML header. This will define things like title, authors, etc. in a manuscript. It is also where you can set defaults for font types, colors, and bibliographies. In the template we've selected there are a number of options. For me, the things I wantedto include were name, surname (i.e. last name), position, address, phone, email, and date so I just deleted the fields that I didn't want to keep and edited the remaining fields to contain my information. Make sure to leave the part that was already populated with information about the output. Also, note that the date is automatically generated to display the month and year at the time you run the code to produce the PDF. I thought this was a nice touch so I left that part intact. One other thing I wanted to adjust in the YAML header for now was the color of the text. In the template there is some red styling incorporated, and I just wanted everything to be black, so I defined the color with "headcolor" and a corresponding hexadecimal id ("414141") that corresponds to black. You can change the headcolor to anything you want, and to see options for hexadecimal colors [click here](https://htmlcolorcodes.com){target="_ blank"}. Once I updated with my info and changed the header color to black, my YAML looked like this:
+
+``` yaml
+name: Eli
+surname: Felts
+position: "Fisheries Biologist"
+address: "20046 Ryegrass Lane, Lenore, Idaho 83541"
+phone: 605-695-1714
+email: "elifelts@gmail.com"
+date: "`r format(Sys.time(), '%B %Y')`"
+headcolor: 414141
+output:
+  vitae::awesomecv:
+    page_total: true
+```
+
+## Code Options
+
+In an RMarkdown file, R code is inserted in things called "chunks". Within each chunk, there are several options that can be defined about what to do with that code. For example, sometimes you just want to display code for demonstration purposes and not actually run it, so you would include and argument `eval=FALSE` to define that you don't want that code evaluated. A good practice is to set global options for an RMarkdown file at the beginning, and those are already present in this template using the syntax `knitr::opts_chunk$set()`. Leave these in the default settings, as this will make it so that your underlying code runs but associated warnings and messages don't show up in the rendered PDF. Another thing I typically do in this initial setup is to load any necessary packages. The template already has `vitae` but we'll also want `tidyverse` and `googlesheeets4` packages as well.
+
+```{r setup}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+
+library(vitae)
+library(tidyverse)
+library(googlesheets4)
+
+```
+
+Now we are ready to start linking to our spreadsheet. Right now I do that by defining the URL of my google sheet.
+
+```{r eval=FALSE}
+
+cv_url <- "https://docs.google.com/spreadsheets/d/1DfPyPFa4xboyjm8dAbTzFnFTgo2oSbx0Auj1pa6RwAo/edit?gid=0#gid=0"
+```
+
+This sets the location of the overall spreadsheet so that we don't have to type the entire path every time we want to access it. Now we'll move into the first section of our CV, which is education. To read in that particular sheet, we can just specify the sheet we want. We are also going to want to combine and reformat a couple of our columns to fit into the parameters of the `vitae` functions. For example, I wanted my degrees, which will be specified by the "what" argument in `detailed_entries` to display as both the degree (e.g. Bachelor of Science) and the major (e.g. Biology). To do this I'll simply use `stringr::str_c()` to make a new column named "display_degree". I will use this convention throughout this process with columns named "display\_\*" to identify columns that are constructed specifically to fit into the `vitae` functions and show exactly the information I want in the rendered PDF output. I'll use a similar process to get just the year of degree completion and the institution (not actually changing anything). On other thing I want is for the institution state to be abbreviated. To accomplish this, I made a key that relates the full state names to abbreviations and joined those to the data frame when I read them in. That may sound like a lot, but this is all accomplished with the following code:
+
+```{r eval=FALSE}
+
+state_key <- tibble(institution_state=state.name,
+                     state=state.abb)
+
+education.df <- read_sheet(cv_url,
+                           sheet="education") %>% 
+  left_join(state_key,by="institution_state") %>% 
+  mutate(display_degree=str_c(degree,major,sep=", "),
+         display_year=year(completion_date),
+         display_institution=institution,
+         display_where=str_c(institution_city,state,sep=", "))
+
+
+```
+
+Now we have converted our underlying data table to contain columns that fit perfectly into `vitae::detailed_entries()` as such:
+
+```{r eval=FALSE}
+
+detailed_entries(education.df,
+                 what=display_degree,
+                 when=display_year,
+                 with=display_institution,
+                 where=display_where)
+
+
+```
