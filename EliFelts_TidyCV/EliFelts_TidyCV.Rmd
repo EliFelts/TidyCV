@@ -1,0 +1,70 @@
+---
+name: Eli
+surname: Felts
+position: "Fisheries Biologist"
+address: "20046 Ryegrass Lane, Lenore, Idaho 83541"
+phone: 605-695-1714
+email: "elifelts@gmail.com"
+date: "`r format(Sys.time(), '%B %Y')`"
+headcolor: 414141
+output:
+  vitae::awesomecv:
+    page_total: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE, warning = FALSE, message = FALSE)
+library(vitae)
+library(tidyverse)
+library(googlesheets4)
+```
+
+```{r read_google}
+
+gs4_auth()
+
+cv_url <- "https://docs.google.com/spreadsheets/d/1DfPyPFa4xboyjm8dAbTzFnFTgo2oSbx0Auj1pa6RwAo/edit?gid=0#gid=0"
+
+education.df <- read_sheet(cv_url,sheet="education")
+
+```
+
+
+
+# Education
+
+```{r}
+library(tibble)
+tribble(
+  ~ Degree, ~ Year, ~ Institution, ~ Where,
+  "Informal studies", "1889-91", "Flying University", "Warsaw, Poland",
+  "Master of Physics", "1893", "Sorbonne Université", "Paris, France",
+  "Master of Mathematics", "1894", "Sorbonne Université", "Paris, France"
+) %>%
+  detailed_entries(Degree, Year, Institution, Where)
+```
+
+# Nobel Prizes
+
+```{r}
+tribble(
+  ~Year, ~Type, ~Desc,
+  1903, "Physics", "Awarded for her work on radioactivity with Pierre Curie and Henri Becquerel",
+  1911, "Chemistry", "Awarded for the discovery of radium and polonium"
+) %>%
+  brief_entries(
+    glue::glue("Nobel Prize in {Type}"),
+    Year,
+    Desc
+  )
+```
+
+# Publications
+
+```{r}
+library(dplyr)
+knitr::write_bib(c("vitae", "tibble"), "packages.bib")
+
+bibliography_entries("packages.bib") %>%
+  arrange(desc(author$family), issued)
+```
