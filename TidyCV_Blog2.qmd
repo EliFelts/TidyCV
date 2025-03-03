@@ -3,6 +3,7 @@ title: "Building a CV from tidy data storage"
 author: "Eli Felts"
 format: html
 editor: visual
+bibliography: references.bib
 ---
 
 ```{r options echo=FALSE}
@@ -25,6 +26,24 @@ library(googledrive)
 
 conflicts_prefer(dplyr::filter(),
                  dplyr::lag())
+```
+
+# Initial Steps
+
+To generate PDF documents from RMarkdown you will need to setup something called LaTeX on your local machine. You can do so using the `tinytex` package [@tinytex] with the following code.
+
+```{r eval=FALSE}
+
+tinytex::install_tinytex()
+
+```
+
+You will only have to do this once. Now, to use templates from `vitae` make sure to install that package as well. You can do so from the RStudio menu by clicking Tools -\> Install Packages and searching for `vitae`, or simply run the following code.
+
+```{r}
+
+install.packages("vitae")
+
 ```
 
 # Starting from template
