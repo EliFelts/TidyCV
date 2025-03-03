@@ -1,0 +1,53 @@
+---
+title: "Building a CV from tidy data storage"
+author: "`r test_dat$gh`"
+params:
+  author: "Placeholder" 
+format: html
+editor: visual
+---
+
+```{r options echo=FALSE}
+
+knitr::opts_chunk$set(
+  message=FALSE,
+  warning=FALSE,
+  fig.width=6.5,
+  fig.height=6,
+  cache = TRUE,
+  dev="png"
+)
+
+library(tidyverse)
+library(vitae)
+library(conflicted)
+library(RefManageR)
+library(googlesheets4)
+library(googledrive)
+
+conflicts_prefer(dplyr::filter(),
+                 dplyr::lag())
+```
+
+
+## Personal Identifiers
+
+In the markdown format, these will go in a specialized part called the YAML header.
+
+```{r}
+
+test_dat <- tribble(~gh,"EliFelts")
+
+```
+
+---
+
+title: "test"
+---
+
+```{r}
+
+
+
+```
+
