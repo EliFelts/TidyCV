@@ -19,29 +19,47 @@ library(tidyverse)
 library(googlesheets4)
 ```
 
-```{r read_google}
+```{r starter_keys}
 
-gs4_auth()
-
-cv_url <- "https://docs.google.com/spreadsheets/d/1DfPyPFa4xboyjm8dAbTzFnFTgo2oSbx0Auj1pa6RwAo/edit?gid=0#gid=0"
-
-education.df <- read_sheet(cv_url,sheet="education")
 
 ```
 
 
+```{r read_google}
+
+cv_url <- "https://docs.google.com/spreadsheets/d/1DfPyPFa4xboyjm8dAbTzFnFTgo2oSbx0Auj1pa6RwAo/edit?gid=0#gid=0"
+
+```
+
 
 # Education
 
+```{r echo=FALSE}
+
+state_key <- tibble(institution_state=state.name,
+                     state=state.abb)
+
+
+education.df <- read_sheet(cv_url,sheet="education")%>% 
+  left_join(state_key,by="institution_state") %>% 
+  mutate(display_degree=str_c(degree,major,sep=", "),
+         display_year=year(completion_date),
+         display_institution=institution,
+         display_where=str_c(institution_city,state,sep=", "))
+
+
+
+```
+
+
 ```{r}
-library(tibble)
-tribble(
-  ~ Degree, ~ Year, ~ Institution, ~ Where,
-  "Informal studies", "1889-91", "Flying University", "Warsaw, Poland",
-  "Master of Physics", "1893", "Sorbonne Université", "Paris, France",
-  "Master of Mathematics", "1894", "Sorbonne Université", "Paris, France"
-) %>%
-  detailed_entries(Degree, Year, Institution, Where)
+
+detailed_entries(education.df,
+                 what=display_degree,
+                 when=display_year,
+                 with=display_institution,
+                 where=display_where)
+
 ```
 
 # Nobel Prizes
