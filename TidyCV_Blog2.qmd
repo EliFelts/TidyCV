@@ -1,8 +1,6 @@
 ---
 title: "Building a CV from tidy data storage"
-author: "`r test_dat$gh`"
-params:
-  author: "Placeholder" 
+author: "Eli Felts"
 format: html
 editor: visual
 ---
@@ -29,25 +27,6 @@ conflicts_prefer(dplyr::filter(),
                  dplyr::lag())
 ```
 
+# Starting from template
 
-## Personal Identifiers
-
-In the markdown format, these will go in a specialized part called the YAML header.
-
-```{r}
-
-test_dat <- tribble(~gh,"EliFelts")
-
-```
-
----
-
-title: "test"
----
-
-```{r}
-
-
-
-```
-
+To start off, open a new RMarkdown file and on the left of the dialog box you will have an option to select "From Template". This will show templates that are available from the `vitae` package. To view examples of these templates check out the [README](https://github.com/mitchelloharawild/vitae?tab=readme-ov-file){target="_blank"} for the package.
